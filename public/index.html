@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Image Upload</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Upload</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" accept="image/*">
+            <button type="submit">Upload</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <div id="textModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="extractedText"></p>
+            <button onclick="copyToClipboard()">Copy Text</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('file');
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const resultDiv = document.getElementById('result');
+                    const extractedText = await response.text();
+                    resultDiv.innerText = extractedText;
+
+                    // Display modal with extracted text
+                    document.getElementById('extractedText').innerText = extractedText;
+                    openModal();
+                } else {
+                    console.error('Upload failed:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error during upload:', error.message);
+            }
+        });
+
+        function openModal() {
+            document.getElementById('textModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('textModal').style.display = 'none';
+        }
+
+        function copyToClipboard() {
+            const extractedText = document.getElementById('extractedText');
+            const range = document.createRange();
+            range.selectNode(extractedText);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            alert('Text copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
