@@ -18,4 +18,5 @@
 go.work
 
 # Certificates and keys
-.pem
+*.pem
+*.old

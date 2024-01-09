@@ -1,13 +1,22 @@
-FROM golang:1.21-alpine3.18 as builder
+FROM golang:latest
+
+RUN apt-get update -qq
+
+RUN apt-get install -y -qq libtesseract-dev libleptonica-dev
+
+ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata/
+
+RUN apt-get install -y -qq \
+  tesseract-ocr-eng \
+  tesseract-ocr-deu \
+  tesseract-ocr-jpn
+
 WORKDIR /app
+
 COPY . .
+
 RUN go build -o main .
 
-FROM alpine:3.18
-WORKDIR /app
-COPY --from=builder /app/main .
-COPY key.pem .
-COPY cert.pem .
-
 EXPOSE 8000
-CMD [ "/app/main" ]
+
+CMD ["./main"]
