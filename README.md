@@ -11,10 +11,6 @@ GOCR is a simple Golang-based OCR (Optical Character Recognition) server that al
      ```
      Follow the prompts to provide the necessary information.
 
-2. **Configure the Server:**
-   - Customize the server configuration by modifying the `conf.go` file or set the necessary environment variables.
-     Adjust parameters such as port, timeouts, and maximum file size according to your requirements.
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
